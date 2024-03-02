@@ -2,6 +2,8 @@ package com.admazsshipping.entrypoint.http;
 
 import com.admazsshipping.dataprovider.model.Shipping;
 import com.admazsshipping.dataprovider.repository.ShippingRepository;
+import com.admazsshipping.entity.ShippingEntity;
+import com.admazsshipping.usecase.ShippingUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,17 +15,15 @@ public class ShippingController {
 
 
     @Autowired
-    private ShippingRepository repository;
+    private ShippingUseCase shippingUseCase;
 
-    @PostMapping("/save")
-    public Shipping saveShipping(@RequestBody Shipping shipping) {
-        return repository.save(shipping);
+    @PostMapping
+    public ShippingEntity saveShipping(@RequestBody ShippingEntity shipping) {
+        return shippingUseCase.saveShipping(shipping);
     }
 
-    @GetMapping("/ships")
-    public List<Shipping> findAllShipping() {
-        List<Shipping> shippings =  repository.findAll();
-        System.out.println(shippings);
-        return shippings;
+    @GetMapping("/all")
+    public List<ShippingEntity> findAllShipping() {
+        return shippingUseCase.findAllShipping();
     }
 }
