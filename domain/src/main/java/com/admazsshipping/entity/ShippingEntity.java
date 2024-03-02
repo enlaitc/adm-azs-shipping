@@ -1,127 +1,117 @@
 package com.admazsshipping.entity;
 
+import com.admazsshipping.entity.vo.*;
+
 import java.util.Date;
 
 public class ShippingEntity {
 
     private String id;
     private String recipientName;
-    private String recipientAddress;
-    private String shippingMethod;
+    private RecipientAddressVO recipientAddress;
+    private ShippingMethodVO shippingMethod;
+    private ShippingStatusEnum shippingStatus;
+    private ShippingSelectedTypeEnum shippingSelectedType;
+    private CargoPropertiesVO cargoProperties;
     private String trackingNumber;
     private Date shippingDate;
+    private Date shippingUpdateDate;
     private Date expectedDeliveryDate;
-    private Boolean isDelivered;
 
-    // dimensions
-    private Double weight;
-    private Double length;
-    private Double width;
-    private Double height;
-    private Double dimensionalWeight;
-
-    public ShippingEntity() {
-
-    }
-
-    private ShippingEntity(String id, String recipientName, String recipientAddress, String shippingMethod, String trackingNumber, Date shippingDate, Date expectedDeliveryDate, Boolean isDelivered, Double weight, Double length, Double width, Double height, Double dimensionalWeight) {
+    public ShippingEntity(String id, String recipientName, RecipientAddressVO recipientAddress, ShippingMethodVO shippingMethod, ShippingStatusEnum shippingStatus, ShippingSelectedTypeEnum shippingSelectedType, CargoPropertiesVO cargoProperties, String trackingNumber, Date shippingDate, Date shippingUpdateDate, Date expectedDeliveryDate) {
         this.id = id;
         this.recipientName = recipientName;
         this.recipientAddress = recipientAddress;
         this.shippingMethod = shippingMethod;
+        this.shippingStatus = shippingStatus;
+        this.shippingSelectedType = shippingSelectedType;
+        this.cargoProperties = cargoProperties;
         this.trackingNumber = trackingNumber;
         this.shippingDate = shippingDate;
+        this.shippingUpdateDate = shippingUpdateDate;
         this.expectedDeliveryDate = expectedDeliveryDate;
-        this.isDelivered = isDelivered;
-        this.weight = weight;
-        this.length = length;
-        this.width = width;
-        this.height = height;
-        this.dimensionalWeight = dimensionalWeight;
     }
 
-    public static class ShippingBuilder {
+    public ShippingEntity() {
+    }
+
+    public static final class ShippingEntityBuilder {
         private String id;
         private String recipientName;
-        private String recipientAddress;
-        private String shippingMethod;
+        private RecipientAddressVO recipientAddress;
+        private ShippingMethodVO shippingMethod;
+        private ShippingStatusEnum shippingStatus;
+        private ShippingSelectedTypeEnum shippingSelectedType;
+        private CargoPropertiesVO cargoProperties;
         private String trackingNumber;
         private Date shippingDate;
+        private Date shippingUpdateDate;
         private Date expectedDeliveryDate;
-        private Boolean isDelivered;
-        private Double weight;
-        private Double length;
-        private Double width;
-        private Double height;
-        private Double dimensionalWeight;
 
-        public ShippingBuilder id(String id) {
+        public ShippingEntityBuilder() {
+        }
+
+        public static ShippingEntityBuilder aShippingEntity() {
+            return new ShippingEntityBuilder();
+        }
+
+        public ShippingEntityBuilder id(String id) {
             this.id = id;
             return this;
         }
 
-        public ShippingBuilder recipientName(String recipientName) {
+        public ShippingEntityBuilder recipientName(String recipientName) {
             this.recipientName = recipientName;
             return this;
         }
 
-        public ShippingBuilder recipientAddress(String recipientAddress) {
+        public ShippingEntityBuilder recipientAddress(RecipientAddressVO recipientAddress) {
             this.recipientAddress = recipientAddress;
             return this;
         }
 
-        public ShippingBuilder shippingMethod(String shippingMethod) {
+        public ShippingEntityBuilder shippingMethod(ShippingMethodVO shippingMethod) {
             this.shippingMethod = shippingMethod;
             return this;
         }
 
-        public ShippingBuilder trackingNumber(String trackingNumber) {
+        public ShippingEntityBuilder shippingStatus(ShippingStatusEnum shippingStatus) {
+            this.shippingStatus = shippingStatus;
+            return this;
+        }
+
+        public ShippingEntityBuilder shippingSelectedType(ShippingSelectedTypeEnum shippingSelectedType) {
+            this.shippingSelectedType = shippingSelectedType;
+            return this;
+        }
+
+        public ShippingEntityBuilder cargoProperties(CargoPropertiesVO cargoProperties) {
+            this.cargoProperties = cargoProperties;
+            return this;
+        }
+
+        public ShippingEntityBuilder trackingNumber(String trackingNumber) {
             this.trackingNumber = trackingNumber;
             return this;
         }
 
-        public ShippingBuilder shippingDate(Date shippingDate) {
+        public ShippingEntityBuilder shippingDate(Date shippingDate) {
             this.shippingDate = shippingDate;
             return this;
         }
 
-        public ShippingBuilder expectedDeliveryDate(Date expectedDeliveryDate) {
+        public ShippingEntityBuilder shippingUpdateDate(Date shippingUpdateDate) {
+            this.shippingUpdateDate = shippingUpdateDate;
+            return this;
+        }
+
+        public ShippingEntityBuilder expectedDeliveryDate(Date expectedDeliveryDate) {
             this.expectedDeliveryDate = expectedDeliveryDate;
             return this;
         }
 
-        public ShippingBuilder isDelivered(Boolean isDelivered) {
-            this.isDelivered = isDelivered;
-            return this;
-        }
-
-        public ShippingBuilder weight(Double weight) {
-            this.weight = weight;
-            return this;
-        }
-
-        public ShippingBuilder length(Double length) {
-            this.length = length;
-            return this;
-        }
-
-        public ShippingBuilder width(Double width) {
-            this.width = width;
-            return this;
-        }
-
-        public ShippingBuilder height(Double height) {
-            this.height = height;
-            return this;
-        }
-
-        public ShippingBuilder dimensionalWeight(Double dimensionalWeight) {
-            this.dimensionalWeight = dimensionalWeight;
-            return this;
-        }
-
-        public ShippingEntity build(){
-            return new ShippingEntity(id, recipientName,recipientAddress,shippingMethod,trackingNumber,shippingDate,expectedDeliveryDate,isDelivered,weight,length,width,height,dimensionalWeight);
+        public ShippingEntity build() {
+            return new ShippingEntity(id, recipientName, recipientAddress, shippingMethod, shippingStatus, shippingSelectedType, cargoProperties, trackingNumber, shippingDate, shippingUpdateDate, expectedDeliveryDate);
         }
     }
 
@@ -141,20 +131,44 @@ public class ShippingEntity {
         this.recipientName = recipientName;
     }
 
-    public String getRecipientAddress() {
+    public RecipientAddressVO getRecipientAddress() {
         return recipientAddress;
     }
 
-    public void setRecipientAddress(String recipientAddress) {
+    public void setRecipientAddress(RecipientAddressVO recipientAddress) {
         this.recipientAddress = recipientAddress;
     }
 
-    public String getShippingMethod() {
+    public ShippingMethodVO getShippingMethod() {
         return shippingMethod;
     }
 
-    public void setShippingMethod(String shippingMethod) {
+    public void setShippingMethod(ShippingMethodVO shippingMethod) {
         this.shippingMethod = shippingMethod;
+    }
+
+    public ShippingStatusEnum getShippingStatus() {
+        return shippingStatus;
+    }
+
+    public void setShippingStatus(ShippingStatusEnum shippingStatus) {
+        this.shippingStatus = shippingStatus;
+    }
+
+    public ShippingSelectedTypeEnum getShippingSelectedType() {
+        return shippingSelectedType;
+    }
+
+    public void setShippingSelectedType(ShippingSelectedTypeEnum shippingSelectedType) {
+        this.shippingSelectedType = shippingSelectedType;
+    }
+
+    public CargoPropertiesVO getCargoProperties() {
+        return cargoProperties;
+    }
+
+    public void setCargoProperties(CargoPropertiesVO cargoProperties) {
+        this.cargoProperties = cargoProperties;
     }
 
     public String getTrackingNumber() {
@@ -173,59 +187,19 @@ public class ShippingEntity {
         this.shippingDate = shippingDate;
     }
 
+    public Date getShippingUpdateDate() {
+        return shippingUpdateDate;
+    }
+
+    public void setShippingUpdateDate(Date shippingUpdateDate) {
+        this.shippingUpdateDate = shippingUpdateDate;
+    }
+
     public Date getExpectedDeliveryDate() {
         return expectedDeliveryDate;
     }
 
     public void setExpectedDeliveryDate(Date expectedDeliveryDate) {
         this.expectedDeliveryDate = expectedDeliveryDate;
-    }
-
-    public Boolean getDelivered() {
-        return isDelivered;
-    }
-
-    public void setDelivered(Boolean delivered) {
-        isDelivered = delivered;
-    }
-
-    public Double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(Double weight) {
-        this.weight = weight;
-    }
-
-    public Double getLength() {
-        return length;
-    }
-
-    public void setLength(Double length) {
-        this.length = length;
-    }
-
-    public Double getWidth() {
-        return width;
-    }
-
-    public void setWidth(Double width) {
-        this.width = width;
-    }
-
-    public Double getHeight() {
-        return height;
-    }
-
-    public void setHeight(Double height) {
-        this.height = height;
-    }
-
-    public Double getDimensionalWeight() {
-        return dimensionalWeight;
-    }
-
-    public void setDimensionalWeight(Double dimensionalWeight) {
-        this.dimensionalWeight = dimensionalWeight;
     }
 }

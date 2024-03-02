@@ -1,101 +1,152 @@
 package com.admazsshipping.dataprovider.model;
 
 import com.admazsshipping.entity.ShippingEntity;
-import org.springframework.data.annotation.Id;
+import com.admazsshipping.entity.vo.*;
 
 import java.util.Date;
 
 public class Shipping {
 
-    @Id
     private String id;
     private String recipientName;
-    private String recipientAddress;
-    private String shippingMethod;
+    private RecipientAddressVO recipientAddress;
+    private ShippingMethodVO shippingMethod;
+    private ShippingStatusEnum shippingStatus;
+    private ShippingSelectedTypeEnum shippingSelectedType;
+    private CargoPropertiesVO cargoProperties;
     private String trackingNumber;
     private Date shippingDate;
+    private Date shippingUpdateDate;
     private Date expectedDeliveryDate;
-    private Boolean isDelivered;
 
-    // dimensions
-    private Double weight;
-    private Double length;
-    private Double width;
-    private Double height;
-    private Double dimensionalWeight;
 
-    public Shipping() {
-
-    }
-
-    public double calculateDimensionalWeight() {
-        double volume = (length / 100) * (width / 100) * (height / 100);
-        double dimensionalWeight = volume * 300;
-        return Math.ceil(dimensionalWeight);
-    }
-
-    public double calculateShippingCost() {
-        double dimensionalWeight = calculateDimensionalWeight();
-        double shippingCost;
-        // Example calculation (actual rates will vary)
-        if (dimensionalWeight > weight) {
-            shippingCost = dimensionalWeight * 1.5; // Example rate
-        } else {
-            shippingCost = weight * 1.5; // Example rate
-        }
-        return shippingCost;
-    }
-
-    public ShippingEntity toEntity(){
-        return new ShippingEntity.ShippingBuilder()
-                .id(this.getId())
-                .recipientName(this.getRecipientName())
-                .recipientAddress(this.getRecipientAddress())
-                .shippingMethod(this.getShippingMethod())
-                .trackingNumber(this.getTrackingNumber())
-                .shippingDate(this.getShippingDate())
-                .expectedDeliveryDate(this.getExpectedDeliveryDate())
-                .isDelivered(this.getDelivered())
-                .weight(this.getWeight())
-                .length(this.getLength())
-                .width(this.getWidth())
-                .height(this.getHeight())
-                .dimensionalWeight(this.getDimensionalWeight())
-                .build();
-    }
-
-    public Shipping toShipping(ShippingEntity entity){
-        return new Shipping(
-                entity.getId(),
-                entity.getRecipientName(),
-                entity.getRecipientAddress(),
-                entity.getShippingMethod(),
-                entity.getTrackingNumber(),
-                entity.getShippingDate(),
-                entity.getExpectedDeliveryDate(),
-                entity.getDelivered(),
-                entity.getWeight(),
-                entity.getLength(),
-                entity.getWidth(),
-                entity.getHeight(),
-                entity.getDimensionalWeight()
-        );
-    }
-
-    public Shipping(String id, String recipientName, String recipientAddress, String shippingMethod, String trackingNumber, Date shippingDate, Date expectedDeliveryDate, Boolean isDelivered, Double weight, Double length, Double width, Double height, Double dimensionalWeight) {
+    public Shipping(String id, String recipientName, RecipientAddressVO recipientAddress, ShippingMethodVO shippingMethod, ShippingStatusEnum shippingStatus, ShippingSelectedTypeEnum shippingSelectedType, CargoPropertiesVO cargoProperties, String trackingNumber, Date shippingDate, Date shippingUpdateDate, Date expectedDeliveryDate) {
         this.id = id;
         this.recipientName = recipientName;
         this.recipientAddress = recipientAddress;
         this.shippingMethod = shippingMethod;
+        this.shippingStatus = shippingStatus;
+        this.shippingSelectedType = shippingSelectedType;
+        this.cargoProperties = cargoProperties;
         this.trackingNumber = trackingNumber;
         this.shippingDate = shippingDate;
+        this.shippingUpdateDate = shippingUpdateDate;
         this.expectedDeliveryDate = expectedDeliveryDate;
-        this.isDelivered = isDelivered;
-        this.weight = weight;
-        this.length = length;
-        this.width = width;
-        this.height = height;
-        this.dimensionalWeight = dimensionalWeight;
+    }
+
+    public Shipping() {
+    }
+
+    public ShippingEntity toEntity(){
+        return new ShippingEntity.ShippingEntityBuilder()
+                .id(this.getId())
+                .recipientName(this.getRecipientName())
+                .recipientAddress(this.getRecipientAddress())
+                .shippingMethod(this.getShippingMethod())
+                .shippingStatus(this.getShippingStatus())
+                .shippingSelectedType(this.getShippingSelectedType())
+                .cargoProperties(this.getCargoProperties())
+                .trackingNumber(this.getTrackingNumber())
+                .shippingDate(this.getShippingDate())
+                .shippingUpdateDate(this.getShippingUpdateDate())
+                .expectedDeliveryDate(this.getExpectedDeliveryDate())
+                .build();
+    }
+
+    public Shipping toShipping(ShippingEntity entity){
+        return new Shipping.ShippingBuilder()
+                .id(entity.getId())
+                .recipientName(entity.getRecipientName())
+                .recipientAddress(entity.getRecipientAddress())
+                .shippingMethod(entity.getShippingMethod())
+                .shippingStatus(entity.getShippingStatus())
+                .shippingSelectedType(entity.getShippingSelectedType())
+                .cargoProperties(entity.getCargoProperties())
+                .trackingNumber(entity.getTrackingNumber())
+                .shippingDate(entity.getShippingDate())
+                .shippingUpdateDate(entity.getShippingUpdateDate())
+                .expectedDeliveryDate(entity.getExpectedDeliveryDate())
+                .build();
+    }
+
+    public static final class ShippingBuilder {
+        private String id;
+        private String recipientName;
+        private RecipientAddressVO recipientAddress;
+        private ShippingMethodVO shippingMethod;
+        private ShippingStatusEnum shippingStatus;
+        private ShippingSelectedTypeEnum shippingSelectedType;
+        private CargoPropertiesVO cargoProperties;
+        private String trackingNumber;
+        private Date shippingDate;
+        private Date shippingUpdateDate;
+        private Date expectedDeliveryDate;
+
+        private ShippingBuilder() {
+        }
+
+        public static ShippingBuilder aShipping() {
+            return new ShippingBuilder();
+        }
+
+        public ShippingBuilder id(String id) {
+            this.id = id;
+            return this;
+        }
+
+        public ShippingBuilder recipientName(String recipientName) {
+            this.recipientName = recipientName;
+            return this;
+        }
+
+        public ShippingBuilder recipientAddress(RecipientAddressVO recipientAddress) {
+            this.recipientAddress = recipientAddress;
+            return this;
+        }
+
+        public ShippingBuilder shippingMethod(ShippingMethodVO shippingMethod) {
+            this.shippingMethod = shippingMethod;
+            return this;
+        }
+
+        public ShippingBuilder shippingStatus(ShippingStatusEnum shippingStatus) {
+            this.shippingStatus = shippingStatus;
+            return this;
+        }
+
+        public ShippingBuilder shippingSelectedType(ShippingSelectedTypeEnum shippingSelectedType) {
+            this.shippingSelectedType = shippingSelectedType;
+            return this;
+        }
+
+        public ShippingBuilder cargoProperties(CargoPropertiesVO cargoProperties) {
+            this.cargoProperties = cargoProperties;
+            return this;
+        }
+
+        public ShippingBuilder trackingNumber(String trackingNumber) {
+            this.trackingNumber = trackingNumber;
+            return this;
+        }
+
+        public ShippingBuilder shippingDate(Date shippingDate) {
+            this.shippingDate = shippingDate;
+            return this;
+        }
+
+        public ShippingBuilder shippingUpdateDate(Date shippingUpdateDate) {
+            this.shippingUpdateDate = shippingUpdateDate;
+            return this;
+        }
+
+        public ShippingBuilder expectedDeliveryDate(Date expectedDeliveryDate) {
+            this.expectedDeliveryDate = expectedDeliveryDate;
+            return this;
+        }
+
+        public Shipping build() {
+            return new Shipping(id, recipientName, recipientAddress, shippingMethod, shippingStatus, shippingSelectedType, cargoProperties, trackingNumber, shippingDate, shippingUpdateDate, expectedDeliveryDate);
+        }
     }
 
     public String getId() {
@@ -114,20 +165,44 @@ public class Shipping {
         this.recipientName = recipientName;
     }
 
-    public String getRecipientAddress() {
+    public RecipientAddressVO getRecipientAddress() {
         return recipientAddress;
     }
 
-    public void setRecipientAddress(String recipientAddress) {
+    public void setRecipientAddress(RecipientAddressVO recipientAddress) {
         this.recipientAddress = recipientAddress;
     }
 
-    public String getShippingMethod() {
+    public ShippingMethodVO getShippingMethod() {
         return shippingMethod;
     }
 
-    public void setShippingMethod(String shippingMethod) {
+    public void setShippingMethod(ShippingMethodVO shippingMethod) {
         this.shippingMethod = shippingMethod;
+    }
+
+    public ShippingStatusEnum getShippingStatus() {
+        return shippingStatus;
+    }
+
+    public void setShippingStatus(ShippingStatusEnum shippingStatus) {
+        this.shippingStatus = shippingStatus;
+    }
+
+    public ShippingSelectedTypeEnum getShippingSelectedType() {
+        return shippingSelectedType;
+    }
+
+    public void setShippingSelectedType(ShippingSelectedTypeEnum shippingSelectedType) {
+        this.shippingSelectedType = shippingSelectedType;
+    }
+
+    public CargoPropertiesVO getCargoProperties() {
+        return cargoProperties;
+    }
+
+    public void setCargoProperties(CargoPropertiesVO cargoProperties) {
+        this.cargoProperties = cargoProperties;
     }
 
     public String getTrackingNumber() {
@@ -146,59 +221,19 @@ public class Shipping {
         this.shippingDate = shippingDate;
     }
 
+    public Date getShippingUpdateDate() {
+        return shippingUpdateDate;
+    }
+
+    public void setShippingUpdateDate(Date shippingUpdateDate) {
+        this.shippingUpdateDate = shippingUpdateDate;
+    }
+
     public Date getExpectedDeliveryDate() {
         return expectedDeliveryDate;
     }
 
     public void setExpectedDeliveryDate(Date expectedDeliveryDate) {
         this.expectedDeliveryDate = expectedDeliveryDate;
-    }
-
-    public Boolean getDelivered() {
-        return isDelivered;
-    }
-
-    public void setDelivered(Boolean delivered) {
-        isDelivered = delivered;
-    }
-
-    public Double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(Double weight) {
-        this.weight = weight;
-    }
-
-    public Double getLength() {
-        return length;
-    }
-
-    public void setLength(Double length) {
-        this.length = length;
-    }
-
-    public Double getWidth() {
-        return width;
-    }
-
-    public void setWidth(Double width) {
-        this.width = width;
-    }
-
-    public Double getHeight() {
-        return height;
-    }
-
-    public void setHeight(Double height) {
-        this.height = height;
-    }
-
-    public Double getDimensionalWeight() {
-        return dimensionalWeight;
-    }
-
-    public void setDimensionalWeight(Double dimensionalWeight) {
-        this.dimensionalWeight = dimensionalWeight;
     }
 }

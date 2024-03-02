@@ -5,32 +5,81 @@ import java.util.Date;
 public class SaveShippingRequest {
 
     private String recipientName;
-    private String recipientAddress;
-    private String shippingMethod;
+    private RecipientAddressVO recipientAddress;
+    private ShippingMethodVO shippingMethod;
+    private ShippingSelectedTypeEnum shippingSelectedType;
+    private SaveCargoPropertiesRequest cargoPropertiesRequest;
     private String trackingNumber;
-    private Date shippingDate;
     private Date expectedDeliveryDate;
 
-    // dimensions
-    private Double weight;
-    private Double length;
-    private Double width;
-    private Double height;
+    public SaveShippingRequest(String recipientName, RecipientAddressVO recipientAddress, ShippingMethodVO shippingMethod, ShippingSelectedTypeEnum shippingSelectedType, SaveCargoPropertiesRequest cargoPropertiesRequest, String trackingNumber, Date expectedDeliveryDate) {
+        this.recipientName = recipientName;
+        this.recipientAddress = recipientAddress;
+        this.shippingMethod = shippingMethod;
+        this.shippingSelectedType = shippingSelectedType;
+        this.cargoPropertiesRequest = cargoPropertiesRequest;
+        this.trackingNumber = trackingNumber;
+        this.expectedDeliveryDate = expectedDeliveryDate;
+    }
 
     public SaveShippingRequest() {
     }
 
-    public SaveShippingRequest(String recipientName, String recipientAddress, String shippingMethod, String trackingNumber, Date shippingDate, Date expectedDeliveryDate, Double weight, Double length, Double width, Double height) {
-        this.recipientName = recipientName;
-        this.recipientAddress = recipientAddress;
-        this.shippingMethod = shippingMethod;
-        this.trackingNumber = trackingNumber;
-        this.shippingDate = shippingDate;
-        this.expectedDeliveryDate = expectedDeliveryDate;
-        this.weight = weight;
-        this.length = length;
-        this.width = width;
-        this.height = height;
+
+    public static final class SaveShippingRequestBuilder {
+        private String recipientName;
+        private RecipientAddressVO recipientAddress;
+        private ShippingMethodVO shippingMethod;
+        private ShippingSelectedTypeEnum shippingSelectedType;
+        private SaveCargoPropertiesRequest cargoPropertiesRequest;
+        private String trackingNumber;
+        private Date expectedDeliveryDate;
+
+        public SaveShippingRequestBuilder() {
+        }
+
+        public static SaveShippingRequestBuilder aSaveShippingRequest() {
+            return new SaveShippingRequestBuilder();
+        }
+
+        public SaveShippingRequestBuilder recipientName(String recipientName) {
+            this.recipientName = recipientName;
+            return this;
+        }
+
+        public SaveShippingRequestBuilder recipientAddress(RecipientAddressVO recipientAddress) {
+            this.recipientAddress = recipientAddress;
+            return this;
+        }
+
+        public SaveShippingRequestBuilder shippingMethod(ShippingMethodVO shippingMethod) {
+            this.shippingMethod = shippingMethod;
+            return this;
+        }
+
+        public SaveShippingRequestBuilder shippingSelectedType(ShippingSelectedTypeEnum shippingSelectedType) {
+            this.shippingSelectedType = shippingSelectedType;
+            return this;
+        }
+
+        public SaveShippingRequestBuilder cargoPropertiesRequest(SaveCargoPropertiesRequest cargoPropertiesRequest) {
+            this.cargoPropertiesRequest = cargoPropertiesRequest;
+            return this;
+        }
+
+        public SaveShippingRequestBuilder trackingNumber(String trackingNumber) {
+            this.trackingNumber = trackingNumber;
+            return this;
+        }
+
+        public SaveShippingRequestBuilder expectedDeliveryDate(Date expectedDeliveryDate) {
+            this.expectedDeliveryDate = expectedDeliveryDate;
+            return this;
+        }
+
+        public SaveShippingRequest build() {
+            return new SaveShippingRequest(recipientName, recipientAddress, shippingMethod, shippingSelectedType, cargoPropertiesRequest, trackingNumber, expectedDeliveryDate);
+        }
     }
 
     public String getRecipientName() {
@@ -41,20 +90,36 @@ public class SaveShippingRequest {
         this.recipientName = recipientName;
     }
 
-    public String getRecipientAddress() {
+    public RecipientAddressVO getRecipientAddress() {
         return recipientAddress;
     }
 
-    public void setRecipientAddress(String recipientAddress) {
+    public void setRecipientAddress(RecipientAddressVO recipientAddress) {
         this.recipientAddress = recipientAddress;
     }
 
-    public String getShippingMethod() {
+    public ShippingMethodVO getShippingMethod() {
         return shippingMethod;
     }
 
-    public void setShippingMethod(String shippingMethod) {
+    public void setShippingMethod(ShippingMethodVO shippingMethod) {
         this.shippingMethod = shippingMethod;
+    }
+
+    public ShippingSelectedTypeEnum getShippingSelectedType() {
+        return shippingSelectedType;
+    }
+
+    public void setShippingSelectedType(ShippingSelectedTypeEnum shippingSelectedType) {
+        this.shippingSelectedType = shippingSelectedType;
+    }
+
+    public SaveCargoPropertiesRequest getCargoPropertiesRequest() {
+        return cargoPropertiesRequest;
+    }
+
+    public void setCargoPropertiesRequest(SaveCargoPropertiesRequest cargoPropertiesRequest) {
+        this.cargoPropertiesRequest = cargoPropertiesRequest;
     }
 
     public String getTrackingNumber() {
@@ -63,46 +128,6 @@ public class SaveShippingRequest {
 
     public void setTrackingNumber(String trackingNumber) {
         this.trackingNumber = trackingNumber;
-    }
-
-    public Date getShippingDate() {
-        return shippingDate;
-    }
-
-    public void setShippingDate(Date shippingDate) {
-        this.shippingDate = shippingDate;
-    }
-
-    public Double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(Double weight) {
-        this.weight = weight;
-    }
-
-    public Double getLength() {
-        return length;
-    }
-
-    public void setLength(Double length) {
-        this.length = length;
-    }
-
-    public Double getWidth() {
-        return width;
-    }
-
-    public void setWidth(Double width) {
-        this.width = width;
-    }
-
-    public Double getHeight() {
-        return height;
-    }
-
-    public void setHeight(Double height) {
-        this.height = height;
     }
 
     public Date getExpectedDeliveryDate() {
