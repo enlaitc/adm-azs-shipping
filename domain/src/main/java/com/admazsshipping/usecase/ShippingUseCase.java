@@ -43,36 +43,20 @@ public class ShippingUseCase {
     public ShippingEntity updateShipping(UpdateShippingRequest updateShippingRequest) throws Exception {
 
         ShippingEntity shippingEntity = shippingDataProvider.findById(updateShippingRequest.id);
-
         ShippingEntity updatedShippingEntity = new ShippingEntity.ShippingEntityBuilder()
+                .id(shippingEntity.getId())
                 .recipientName(updateShippingRequest.repicientName)
                 .recipientAddress(updateShippingRequest.recipientAddress)
                 .shippingMethod(updateShippingRequest.shippingMethod)
+                .shippingStatus(shippingEntity.getShippingStatus())
                 .shippingSelectedType(updateShippingRequest.shippingSelectedType)
                 .cargoProperties(CargoPropertiesSaveMapper.INSTANCE.toCargoProperties(updateShippingRequest.cargoPropertiesRequest))
+                .trackingNumber(shippingEntity.getTrackingNumber())
+                .shippingDate(shippingEntity.getShippingDate())
                 .shippingUpdateDate(new Date(System.currentTimeMillis()))
                 .expectedDeliveryDate(updateShippingRequest.expectedDeliveryDate)
                 .build();
 
-        for (Field field : ShippingEntity.class.getDeclaredFields()) {
-            field.setAccessible(true);
-            if (field.get(updatedShippingEntity) != null && !field.get(updatedShippingEntity).equals(field.get(shippingEntity))) {
-
-                if (field.get(shippingEntity) == shippingEntity.getRecipientAddress()) {
-
-                    for (Field field1 : field.get(shippingEntity).getClass().getDeclaredFields()) {
-                        field1.setAccessible(true);
-                        if (field1.get(updatedShippingEntity.getRecipientAddress()) != null && !field1.get(updatedShippingEntity.getRecipientAddress()).equals(field1.get(shippingEntity.getRecipientAddress()))) {
-                            field1.set(shippingEntity.getRecipientAddress(), field1.get(updatedShippingEntity.getRecipientAddress()));
-                        }
-                    }
-                    continue;
-                }
-
-                field.set(shippingEntity, field.get(updatedShippingEntity));
-            }
-        }
-
-        return shippingDataProvider.updateShipping(shippingEntity);
+        return shippingDataProvider.updateShipping(updatedShippingEntity);
     }
 }

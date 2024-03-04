@@ -27,7 +27,7 @@ public class ShippingController {
         return shippingUseCase.findAllShipping();
     }
 
-    @PatchMapping("/update")
+    @PutMapping("/update")
     public ShippingEntity updateShipping(@RequestBody UpdateShippingRequest updateShippingRequest) throws Exception {
         return shippingUseCase.updateShipping(updateShippingRequest);
     }
