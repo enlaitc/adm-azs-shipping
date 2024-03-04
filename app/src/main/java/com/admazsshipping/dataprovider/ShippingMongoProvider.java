@@ -14,7 +14,6 @@ public class ShippingMongoProvider implements ShippingDataProvider{
     @Autowired
     private ShippingRepository repository;
 
-
     @Override
     public ShippingEntity saveShipping(ShippingEntity entity) {
         return repository.save(new Shipping().toShipping(entity)).toEntity();
@@ -23,5 +22,16 @@ public class ShippingMongoProvider implements ShippingDataProvider{
     @Override
     public List<ShippingEntity> findAllShipping() {
         return repository.findAll().stream().map(Shipping::toEntity).toList();
+    }
+
+    @Override
+    public ShippingEntity updateShipping(ShippingEntity updatedShippingEntity) {
+        return repository.save(new Shipping().toShipping(updatedShippingEntity)).toEntity();
+    }
+
+    @Override
+    public ShippingEntity findById(String id) throws Exception {
+        return repository.findById(id).orElseThrow(() -> new Exception("Shipping not found!"))
+                .toEntity();
     }
 }

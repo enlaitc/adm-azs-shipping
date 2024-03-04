@@ -2,6 +2,7 @@ package com.admazsshipping.entrypoint.http;
 
 import com.admazsshipping.entity.ShippingEntity;
 import com.admazsshipping.entity.vo.SaveShippingRequest;
+import com.admazsshipping.entity.vo.UpdateShippingRequest;
 import com.admazsshipping.usecase.ShippingUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,5 +25,10 @@ public class ShippingController {
     @GetMapping("/all")
     public List<ShippingEntity> findAllShipping() {
         return shippingUseCase.findAllShipping();
+    }
+
+    @PatchMapping("/update")
+    public ShippingEntity updateShipping(@RequestBody UpdateShippingRequest updateShippingRequest) throws Exception {
+        return shippingUseCase.updateShipping(updateShippingRequest);
     }
 }

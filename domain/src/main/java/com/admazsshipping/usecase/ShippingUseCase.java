@@ -2,12 +2,10 @@ package com.admazsshipping.usecase;
 
 import com.admazsshipping.dataprovider.ShippingDataProvider;
 import com.admazsshipping.entity.ShippingEntity;
-import com.admazsshipping.entity.vo.CargoPropertiesVO;
-import com.admazsshipping.entity.vo.SaveShippingRequest;
-import com.admazsshipping.entity.vo.ShippingStatusEnum;
+import com.admazsshipping.entity.vo.*;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.List;
 
@@ -29,14 +27,7 @@ public class ShippingUseCase {
                         .shippingMethod(shippingRequest.getShippingMethod())
                         .shippingStatus(ShippingStatusEnum.POSTING)
                         .shippingSelectedType(shippingRequest.getShippingSelectedType())
-                        .cargoProperties(new CargoPropertiesVO.CargoPropertiesVOBuilder()
-                                .weight(shippingRequest.getCargoPropertiesRequest().getWeight())
-                                .length(shippingRequest.getCargoPropertiesRequest().getLength())
-                                .width(shippingRequest.getCargoPropertiesRequest().getWidth())
-                                .height(shippingRequest.getCargoPropertiesRequest().getHeight())
-                                .cubageFactor(shippingRequest.getCargoPropertiesRequest().getCubageFactor())
-                                .dimensionalWeight(calculateDimensionalWeight(shippingRequest.getCargoPropertiesRequest().getLength(), shippingRequest.getCargoPropertiesRequest().getWidth(), shippingRequest.getCargoPropertiesRequest().getHeight()))
-                                .build())
+                        .cargoProperties(CargoPropertiesSaveMapper.INSTANCE.toCargoProperties(shippingRequest.getCargoPropertiesRequest()))
                         .trackingNumber(shippingRequest.getTrackingNumber())
                         .shippingDate(new Date(System.currentTimeMillis()))
                         .shippingUpdateDate(null)
@@ -49,9 +40,39 @@ public class ShippingUseCase {
         return shippingDataProvider.findAllShipping();
     }
 
-    private double calculateDimensionalWeight(Double length, Double width, Double height) {
-        double volume = (length / 100) * (width / 100) * (height / 100);
-        double dimensionalWeight = volume * 300;
-        return Math.round(dimensionalWeight * 100.0) / 100.0;
+    public ShippingEntity updateShipping(UpdateShippingRequest updateShippingRequest) throws Exception {
+
+        ShippingEntity shippingEntity = shippingDataProvider.findById(updateShippingRequest.id);
+
+        ShippingEntity updatedShippingEntity = new ShippingEntity.ShippingEntityBuilder()
+                .recipientName(updateShippingRequest.repicientName)
+                .recipientAddress(updateShippingRequest.recipientAddress)
+                .shippingMethod(updateShippingRequest.shippingMethod)
+                .shippingSelectedType(updateShippingRequest.shippingSelectedType)
+                .cargoProperties(CargoPropertiesSaveMapper.INSTANCE.toCargoProperties(updateShippingRequest.cargoPropertiesRequest))
+                .shippingUpdateDate(new Date(System.currentTimeMillis()))
+                .expectedDeliveryDate(updateShippingRequest.expectedDeliveryDate)
+                .build();
+
+        for (Field field : ShippingEntity.class.getDeclaredFields()) {
+            field.setAccessible(true);
+            if (field.get(updatedShippingEntity) != null && !field.get(updatedShippingEntity).equals(field.get(shippingEntity))) {
+
+                if (field.get(shippingEntity) == shippingEntity.getRecipientAddress()) {
+
+                    for (Field field1 : field.get(shippingEntity).getClass().getDeclaredFields()) {
+                        field1.setAccessible(true);
+                        if (field1.get(updatedShippingEntity.getRecipientAddress()) != null && !field1.get(updatedShippingEntity.getRecipientAddress()).equals(field1.get(shippingEntity.getRecipientAddress()))) {
+                            field1.set(shippingEntity.getRecipientAddress(), field1.get(updatedShippingEntity.getRecipientAddress()));
+                        }
+                    }
+                    continue;
+                }
+
+                field.set(shippingEntity, field.get(updatedShippingEntity));
+            }
+        }
+
+        return shippingDataProvider.updateShipping(shippingEntity);
     }
 }

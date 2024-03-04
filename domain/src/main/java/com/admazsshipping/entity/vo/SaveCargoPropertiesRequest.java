@@ -1,10 +1,10 @@
 package com.admazsshipping.entity.vo;
 
 public class SaveCargoPropertiesRequest {
-    private Double weight;
-    private Double length;
-    private Double width;
-    private Double height;
+    protected Double weight = (double) 0;
+    private Double length = (double) 0;
+    private Double width = (double) 0;
+    private Double height = (double) 0;
     private Double cubageFactor;
 
     public SaveCargoPropertiesRequest(Double weight, Double length, Double width, Double height, Double cubageFactor) {
