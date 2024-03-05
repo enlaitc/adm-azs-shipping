@@ -8,14 +8,16 @@ public class CargoPropertiesVO {
     private Double height;
     private Double cubageFactor;
     private Double dimensionalWeight;
+    private Double value;
 
-    public CargoPropertiesVO(Double weight, Double length, Double width, Double height, Double cubageFactor, Double dimensionalWeight) {
+    public CargoPropertiesVO(Double weight, Double length, Double width, Double height, Double cubageFactor, Double dimensionalWeight, Double value) {
         this.weight = weight;
         this.length = length;
         this.width = width;
         this.height = height;
         this.cubageFactor = cubageFactor;
         this.dimensionalWeight = dimensionalWeight;
+        this.value = value;
     }
 
     public CargoPropertiesVO() {
@@ -29,11 +31,12 @@ public class CargoPropertiesVO {
         private Double height;
         private Double cubageFactor;
         private Double dimensionalWeight;
+        private Double value;
 
         public CargoPropertiesVOBuilder() {
         }
 
-        public static CargoPropertiesVOBuilder aCargoPropertiesVO() {
+        public static CargoPropertiesVOBuilder CargoPropertiesVO() {
             return new CargoPropertiesVOBuilder();
         }
 
@@ -67,8 +70,13 @@ public class CargoPropertiesVO {
             return this;
         }
 
+        public CargoPropertiesVOBuilder value(Double value) {
+            this.value = value;
+            return this;
+        }
+
         public CargoPropertiesVO build() {
-            return new CargoPropertiesVO(weight, length, width, height, cubageFactor, dimensionalWeight);
+            return new CargoPropertiesVO(weight, length, width, height, cubageFactor, dimensionalWeight, value);
         }
     }
 
@@ -118,5 +126,13 @@ public class CargoPropertiesVO {
 
     public void setDimensionalWeight(Double dimensionalWeight) {
         this.dimensionalWeight = dimensionalWeight;
+    }
+
+    public Double getValue() {
+        return value;
+    }
+
+    public void setValue(Double value) {
+        this.value = value;
     }
 }

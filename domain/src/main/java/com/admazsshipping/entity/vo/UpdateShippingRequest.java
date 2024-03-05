@@ -4,13 +4,13 @@ import java.util.Date;
 
 public class UpdateShippingRequest {
 
-    public String id;
-    public String repicientName;
-    public RecipientAddressVO recipientAddress;
-    public ShippingMethodVO shippingMethod;
-    public ShippingSelectedTypeEnum shippingSelectedType;
-    public SaveCargoPropertiesRequest cargoPropertiesRequest;
-    public Date expectedDeliveryDate;
+    private String id;
+    private String repicientName;
+    private RecipientAddressVO recipientAddress;
+    private ShippingMethodVO shippingMethod;
+    private ShippingSelectedTypeEnum shippingSelectedType;
+    private SaveCargoPropertiesRequest cargoPropertiesRequest;
+    private Date expectedDeliveryDate;
 
     public UpdateShippingRequest(String id, String repicientName, RecipientAddressVO recipientAddress, ShippingMethodVO shippingMethod, ShippingSelectedTypeEnum shippingSelectedType, SaveCargoPropertiesRequest cargoPropertiesRequest, Date expectedDeliveryDate) {
         this.id = id;
@@ -22,62 +22,7 @@ public class UpdateShippingRequest {
         this.expectedDeliveryDate = expectedDeliveryDate;
     }
 
-
-    public static final class UpdateShippingRequestBuilder {
-
-        private String id;
-        private String repicientName;
-        private RecipientAddressVO recipientAddress;
-        private ShippingMethodVO shippingMethod;
-        private ShippingSelectedTypeEnum shippingSelectedType;
-        private SaveCargoPropertiesRequest cargoPropertiesRequest;
-        private Date expectedDeliveryDate;
-
-        private UpdateShippingRequestBuilder() {
-        }
-
-        public static UpdateShippingRequestBuilder anUpdateShippingRequest() {
-            return new UpdateShippingRequestBuilder();
-        }
-
-
-        public UpdateShippingRequestBuilder id(String id) {
-            this.id = id;
-            return this;
-        }
-        public UpdateShippingRequestBuilder repicientName(String repicientName) {
-            this.repicientName = repicientName;
-            return this;
-        }
-
-        public UpdateShippingRequestBuilder recipientAddress(RecipientAddressVO recipientAddress) {
-            this.recipientAddress = recipientAddress;
-            return this;
-        }
-
-        public UpdateShippingRequestBuilder shippingMethod(ShippingMethodVO shippingMethod) {
-            this.shippingMethod = shippingMethod;
-            return this;
-        }
-
-        public UpdateShippingRequestBuilder shippingSelectedType(ShippingSelectedTypeEnum shippingSelectedType) {
-            this.shippingSelectedType = shippingSelectedType;
-            return this;
-        }
-
-        public UpdateShippingRequestBuilder cargoPropertiesRequest(SaveCargoPropertiesRequest cargoPropertiesRequest) {
-            this.cargoPropertiesRequest = cargoPropertiesRequest;
-            return this;
-        }
-
-        public UpdateShippingRequestBuilder expectedDeliveryDate(Date expectedDeliveryDate) {
-            this.expectedDeliveryDate = expectedDeliveryDate;
-            return this;
-        }
-
-        public UpdateShippingRequest build() {
-            return new UpdateShippingRequest(id, repicientName, recipientAddress, shippingMethod, shippingSelectedType, cargoPropertiesRequest, expectedDeliveryDate);
-        }
+    public UpdateShippingRequest() {
     }
 
     public String getId() {
@@ -124,7 +69,7 @@ public class UpdateShippingRequest {
         return cargoPropertiesRequest;
     }
 
-    public void setCargoProperties(SaveCargoPropertiesRequest cargoPropertiesRequest) {
+    public void setCargoPropertiesRequest(SaveCargoPropertiesRequest cargoPropertiesRequest) {
         this.cargoPropertiesRequest = cargoPropertiesRequest;
     }
 

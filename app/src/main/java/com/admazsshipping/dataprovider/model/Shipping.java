@@ -2,11 +2,13 @@ package com.admazsshipping.dataprovider.model;
 
 import com.admazsshipping.entity.ShippingEntity;
 import com.admazsshipping.entity.vo.*;
+import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 
 public class Shipping {
 
+    @Id
     private String id;
     private String recipientName;
     private RecipientAddressVO recipientAddress;

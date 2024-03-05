@@ -4,5 +4,6 @@ public enum ShippingStatusEnum {
 
     POSTING,
     ON_ROUTE,
-    DELIVERED
+    DELIVERED,
+    CANCELLED
 }

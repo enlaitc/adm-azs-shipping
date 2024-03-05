@@ -1,7 +1,7 @@
 package com.admazsshipping.entity.vo;
 
 public class SaveCargoPropertiesRequest {
-    protected Double weight = (double) 0;
+    private Double weight = (double) 0;
     private Double length = (double) 0;
     private Double width = (double) 0;
     private Double height = (double) 0;

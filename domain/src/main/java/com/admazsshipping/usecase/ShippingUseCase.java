@@ -2,10 +2,10 @@ package com.admazsshipping.usecase;
 
 import com.admazsshipping.dataprovider.ShippingDataProvider;
 import com.admazsshipping.entity.ShippingEntity;
+import com.admazsshipping.entity.mapper.CargoPropertiesSaveMapper;
 import com.admazsshipping.entity.vo.*;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class ShippingUseCase {
                         .shippingMethod(shippingRequest.getShippingMethod())
                         .shippingStatus(ShippingStatusEnum.POSTING)
                         .shippingSelectedType(shippingRequest.getShippingSelectedType())
-                        .cargoProperties(CargoPropertiesSaveMapper.INSTANCE.toCargoProperties(shippingRequest.getCargoPropertiesRequest()))
+                        .cargoProperties(CargoPropertiesSaveMapper.INSTANCE.toCargoProperties(shippingRequest.getCargoPropertiesRequest(), shippingRequest.getShippingSelectedType()))
                         .trackingNumber(shippingRequest.getTrackingNumber())
                         .shippingDate(new Date(System.currentTimeMillis()))
                         .shippingUpdateDate(null)
@@ -42,19 +42,19 @@ public class ShippingUseCase {
 
     public ShippingEntity updateShipping(UpdateShippingRequest updateShippingRequest) throws Exception {
 
-        ShippingEntity shippingEntity = shippingDataProvider.findById(updateShippingRequest.id);
+        ShippingEntity shippingEntity = shippingDataProvider.findById(updateShippingRequest.getId());
         ShippingEntity updatedShippingEntity = new ShippingEntity.ShippingEntityBuilder()
                 .id(shippingEntity.getId())
-                .recipientName(updateShippingRequest.repicientName)
-                .recipientAddress(updateShippingRequest.recipientAddress)
-                .shippingMethod(updateShippingRequest.shippingMethod)
+                .recipientName(updateShippingRequest.getRepicientName())
+                .recipientAddress(updateShippingRequest.getRecipientAddress())
+                .shippingMethod(updateShippingRequest.getShippingMethod())
                 .shippingStatus(shippingEntity.getShippingStatus())
-                .shippingSelectedType(updateShippingRequest.shippingSelectedType)
-                .cargoProperties(CargoPropertiesSaveMapper.INSTANCE.toCargoProperties(updateShippingRequest.cargoPropertiesRequest))
+                .shippingSelectedType(updateShippingRequest.getShippingSelectedType())
+                .cargoProperties(CargoPropertiesSaveMapper.INSTANCE.toCargoProperties(updateShippingRequest.getCargoPropertiesRequest(), updateShippingRequest.getShippingSelectedType()))
                 .trackingNumber(shippingEntity.getTrackingNumber())
                 .shippingDate(shippingEntity.getShippingDate())
                 .shippingUpdateDate(new Date(System.currentTimeMillis()))
-                .expectedDeliveryDate(updateShippingRequest.expectedDeliveryDate)
+                .expectedDeliveryDate(updateShippingRequest.getExpectedDeliveryDate())
                 .build();
 
         return shippingDataProvider.updateShipping(updatedShippingEntity);
