@@ -1,5 +1,7 @@
 package com.admazsshipping.entity.vo;
 
+import java.math.BigDecimal;
+
 public class CargoPropertiesVO {
 
     private Double weight;
@@ -8,9 +10,9 @@ public class CargoPropertiesVO {
     private Double height;
     private Double cubageFactor;
     private Double dimensionalWeight;
-    private Double value;
+    private BigDecimal value;
 
-    public CargoPropertiesVO(Double weight, Double length, Double width, Double height, Double cubageFactor, Double dimensionalWeight, Double value) {
+    public CargoPropertiesVO(Double weight, Double length, Double width, Double height, Double cubageFactor, Double dimensionalWeight, BigDecimal value) {
         this.weight = weight;
         this.length = length;
         this.width = width;
@@ -31,7 +33,7 @@ public class CargoPropertiesVO {
         private Double height;
         private Double cubageFactor;
         private Double dimensionalWeight;
-        private Double value;
+        private BigDecimal value;
 
         public CargoPropertiesVOBuilder() {
         }
@@ -70,7 +72,7 @@ public class CargoPropertiesVO {
             return this;
         }
 
-        public CargoPropertiesVOBuilder value(Double value) {
+        public CargoPropertiesVOBuilder value(BigDecimal value) {
             this.value = value;
             return this;
         }
@@ -128,11 +130,11 @@ public class CargoPropertiesVO {
         this.dimensionalWeight = dimensionalWeight;
     }
 
-    public Double getValue() {
+    public BigDecimal getValue() {
         return value;
     }
 
-    public void setValue(Double value) {
+    public void setValue(BigDecimal value) {
         this.value = value;
     }
 }

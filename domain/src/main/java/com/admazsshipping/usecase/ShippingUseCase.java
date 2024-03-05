@@ -6,6 +6,7 @@ import com.admazsshipping.entity.mapper.CargoPropertiesSaveMapper;
 import com.admazsshipping.entity.vo.*;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -14,11 +15,27 @@ public class ShippingUseCase {
 
     private final ShippingDataProvider shippingDataProvider;
 
-    public ShippingUseCase(ShippingDataProvider shippingDataProvider) {
+    private final CalculationUseCase calculationUseCase;
+
+    public ShippingUseCase(ShippingDataProvider shippingDataProvider, CalculationUseCase calculationUseCase) {
         this.shippingDataProvider = shippingDataProvider;
+        this.calculationUseCase = calculationUseCase;
     }
 
     public ShippingEntity saveShipping(SaveShippingRequest shippingRequest) {
+        Double dimensionalWeight = calculationUseCase.calculateDimensionalWeight(
+                shippingRequest.getCargoPropertiesRequest().getLength(),
+                shippingRequest.getCargoPropertiesRequest().getWidth(),
+                shippingRequest.getCargoPropertiesRequest().getHeight(),
+                shippingRequest.getCargoPropertiesRequest().getCubageFactor()
+        );
+
+        BigDecimal value = calculationUseCase.calculateShippingValue(
+                shippingRequest.getCargoPropertiesRequest().getWeight(),
+                dimensionalWeight,
+                shippingRequest.getShippingSelectedType()
+        );
+
         return shippingDataProvider.saveShipping(
                 new ShippingEntity.ShippingEntityBuilder()
                         .id(null)
@@ -27,7 +44,7 @@ public class ShippingUseCase {
                         .shippingMethod(shippingRequest.getShippingMethod())
                         .shippingStatus(ShippingStatusEnum.POSTING)
                         .shippingSelectedType(shippingRequest.getShippingSelectedType())
-                        .cargoProperties(CargoPropertiesSaveMapper.INSTANCE.toCargoProperties(shippingRequest.getCargoPropertiesRequest(), shippingRequest.getShippingSelectedType()))
+                        .cargoProperties(CargoPropertiesSaveMapper.INSTANCE.toCargoProperties(shippingRequest.getCargoPropertiesRequest(), dimensionalWeight, value))
                         .trackingNumber(shippingRequest.getTrackingNumber())
                         .shippingDate(new Date(System.currentTimeMillis()))
                         .shippingUpdateDate(null)
@@ -41,8 +58,20 @@ public class ShippingUseCase {
     }
 
     public ShippingEntity updateShipping(UpdateShippingRequest updateShippingRequest) throws Exception {
-
         ShippingEntity shippingEntity = shippingDataProvider.findById(updateShippingRequest.getId());
+
+        Double dimensionalWeight = calculationUseCase.calculateDimensionalWeight(
+                updateShippingRequest.getCargoPropertiesRequest().getLength(),
+                updateShippingRequest.getCargoPropertiesRequest().getWidth(),
+                updateShippingRequest.getCargoPropertiesRequest().getHeight(),
+                updateShippingRequest.getCargoPropertiesRequest().getCubageFactor()
+        );
+
+        BigDecimal value = calculationUseCase.calculateShippingValue(
+                updateShippingRequest.getCargoPropertiesRequest().getWeight(),
+                dimensionalWeight,
+                updateShippingRequest.getShippingSelectedType()
+        );
         ShippingEntity updatedShippingEntity = new ShippingEntity.ShippingEntityBuilder()
                 .id(shippingEntity.getId())
                 .recipientName(updateShippingRequest.getRepicientName())
@@ -50,7 +79,7 @@ public class ShippingUseCase {
                 .shippingMethod(updateShippingRequest.getShippingMethod())
                 .shippingStatus(shippingEntity.getShippingStatus())
                 .shippingSelectedType(updateShippingRequest.getShippingSelectedType())
-                .cargoProperties(CargoPropertiesSaveMapper.INSTANCE.toCargoProperties(updateShippingRequest.getCargoPropertiesRequest(), updateShippingRequest.getShippingSelectedType()))
+                .cargoProperties(CargoPropertiesSaveMapper.INSTANCE.toCargoProperties(updateShippingRequest.getCargoPropertiesRequest(), dimensionalWeight, value))
                 .trackingNumber(shippingEntity.getTrackingNumber())
                 .shippingDate(shippingEntity.getShippingDate())
                 .shippingUpdateDate(new Date(System.currentTimeMillis()))
@@ -59,4 +88,5 @@ public class ShippingUseCase {
 
         return shippingDataProvider.updateShipping(updatedShippingEntity);
     }
+
 }
