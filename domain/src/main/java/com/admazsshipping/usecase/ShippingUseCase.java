@@ -6,6 +6,7 @@ import com.admazsshipping.entity.mapper.CargoPropertiesSaveMapper;
 import com.admazsshipping.entity.vo.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -91,7 +92,20 @@ public class ShippingUseCase {
         return shippingDataProvider.updateShipping(updatedShippingEntity);
     }
 
-    public Page<ShippingEntity> findByAnyFields(String field, Pageable pageable){
+    public Page<ShippingEntity> findByAnyFields(String field, Pageable pageable) {
         return shippingDataProvider.findByAnyFields(field, pageable);
+    }
+
+    public ShippingEntity cancelShipping(String shippingId) throws Exception {
+        ShippingEntity shippingEntity = shippingDataProvider.findById(shippingId);
+
+        shippingEntity.setShippingStatus(ShippingStatusEnum.CANCELLED);
+
+        return shippingDataProvider.updateShipping(shippingEntity);
+    }
+
+    public ResponseEntity<Void> deleteShipping(String shippingId) throws Exception {
+        ShippingEntity shippingEntity = shippingDataProvider.findById(shippingId);
+        return shippingDataProvider.deleteShipping(shippingEntity);
     }
 }

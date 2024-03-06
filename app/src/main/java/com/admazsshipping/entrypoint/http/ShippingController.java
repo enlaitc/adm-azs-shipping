@@ -7,6 +7,7 @@ import com.admazsshipping.usecase.ShippingUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,5 +38,15 @@ public class ShippingController {
     @GetMapping("/{field}")
     public Page<ShippingEntity> findByAnyFields(@PathVariable String field, Pageable pageable){
         return shippingUseCase.findByAnyFields(field, pageable);
+    }
+
+    @PatchMapping("/cancel/{shippingId}")
+    public ShippingEntity cancelShipping(@PathVariable String shippingId) throws Exception {
+        return shippingUseCase.cancelShipping(shippingId);
+    }
+
+    @DeleteMapping("/{shippingId}")
+    public ResponseEntity<Void> deleteShipping(@PathVariable String shippingId) throws Exception {
+        return shippingUseCase.deleteShipping(shippingId);
     }
 }
