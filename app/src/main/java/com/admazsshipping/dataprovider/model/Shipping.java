@@ -3,9 +3,12 @@ package com.admazsshipping.dataprovider.model;
 import com.admazsshipping.entity.ShippingEntity;
 import com.admazsshipping.entity.vo.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
+
+@Document(collection = "shipping")
 public class Shipping {
 
     @Id

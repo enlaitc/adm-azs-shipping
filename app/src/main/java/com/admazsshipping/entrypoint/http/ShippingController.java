@@ -5,6 +5,8 @@ import com.admazsshipping.entity.vo.SaveShippingRequest;
 import com.admazsshipping.entity.vo.UpdateShippingRequest;
 import com.admazsshipping.usecase.ShippingUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,13 +24,18 @@ public class ShippingController {
         return shippingUseCase.saveShipping(shippingRequest);
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public List<ShippingEntity> findAllShipping() {
         return shippingUseCase.findAllShipping();
     }
 
-    @PutMapping("/update")
+    @PutMapping
     public ShippingEntity updateShipping(@RequestBody UpdateShippingRequest updateShippingRequest) throws Exception {
         return shippingUseCase.updateShipping(updateShippingRequest);
+    }
+
+    @GetMapping("/{field}")
+    public Page<ShippingEntity> findByAnyFields(@PathVariable String field, Pageable pageable){
+        return shippingUseCase.findByAnyFields(field, pageable);
     }
 }
