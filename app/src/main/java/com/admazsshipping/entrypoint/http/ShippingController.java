@@ -36,7 +36,7 @@ public class ShippingController {
     }
 
     @GetMapping("/{field}")
-    public Page<ShippingEntity> findByAnyFields(@PathVariable String field, Pageable pageable){
+    public Page<ShippingEntity> findByAnyFields(@PathVariable String field, Pageable pageable) {
         return shippingUseCase.findByAnyFields(field, pageable);
     }
 

@@ -26,7 +26,7 @@ public class SaveCargoPropertiesRequest {
         private Double height;
         private Double cubageFactor;
 
-        private SaveCargoPropertiesRequestBuilder() {
+        public SaveCargoPropertiesRequestBuilder() {
         }
 
         public static SaveCargoPropertiesRequestBuilder aSaveCargoPropertiesRequest() {
