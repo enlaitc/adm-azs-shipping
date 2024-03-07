@@ -10,12 +10,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,6 +49,7 @@ class ShippingUseCaseTest {
                         BigDecimal.TEN
 
                 ))
+                .shippingStatus(ShippingStatusEnum.CANCELLED)
                 .build();
     }
 
@@ -119,6 +124,52 @@ class ShippingUseCaseTest {
 
         assertEquals(Collections.singletonList(shipping), shippingEntityList);
         verify(shippingDataProvider).findAllShipping();
+        verifyNoMoreInteractions(shippingDataProvider);
+    }
+
+    @Test
+    void findByAnyFields_ShouldReturnPageOfShippingEntityWithSuccess() {
+        when(shippingDataProvider.findByAnyFields(anyString(), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(this.shipping)));
+
+        Page<ShippingEntity> shippingEntityPage = shippingUseCase.findByAnyFields("", Pageable.unpaged());
+
+        assertEquals(new PageImpl<>(List.of(shipping)), shippingEntityPage);
+        verify(shippingDataProvider).findByAnyFields(anyString(), any(Pageable.class));
+        verifyNoMoreInteractions(shippingDataProvider);
+    }
+
+    @Test
+    void deleteShipping_ShouldReturnNoContentWhenDeleteShippingWithSuccess() throws Exception {
+        String shippingId = "";
+        when(shippingDataProvider.findById(shippingId))
+                .thenReturn(this.shipping);
+        when(shippingDataProvider.deleteShipping(any(ShippingEntity.class)))
+                .thenReturn(ResponseEntity.noContent().build());
+
+        ResponseEntity<Void> response = shippingUseCase.deleteShipping(shippingId);
+
+        assertEquals(ResponseEntity.noContent().build(), response);
+        verify(shippingDataProvider).deleteShipping(any(ShippingEntity.class));
+        verifyNoMoreInteractions(shippingDataProvider);
+    }
+
+    @Test
+    void cancelShipping_ShouldReturnShippingEntityWhenUpdateWithSuccess() throws Exception {
+        String shippingId = "";
+        ShippingEntity shippingEntity = new ShippingEntity.ShippingEntityBuilder()
+                .shippingStatus(ShippingStatusEnum.POSTING)
+                .build();
+
+        when(shippingDataProvider.findById(shippingId))
+                .thenReturn(this.shipping);
+        when(shippingDataProvider.updateShipping(any(ShippingEntity.class)))
+                .thenReturn(this.shipping);
+
+        ShippingEntity response = shippingUseCase.cancelShipping(shippingId);
+
+        assertEquals(ShippingStatusEnum.CANCELLED, response.getShippingStatus());
+        verify(shippingDataProvider).updateShipping(any(ShippingEntity.class));
         verifyNoMoreInteractions(shippingDataProvider);
     }
 }
