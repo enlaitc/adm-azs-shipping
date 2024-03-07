@@ -26,7 +26,7 @@ public class ShippingUseCase {
     }
 
     public ShippingEntity saveShipping(SaveShippingRequest shippingRequest) throws Exception {
-        BigDecimal value;
+        BigDecimal value = null;
         Double dimensionalWeight = null;
 
         switch (shippingRequest.getShippingSelectedType()) {
@@ -49,8 +49,6 @@ public class ShippingUseCase {
                         shippingRequest.getCargoPropertiesRequest().getWeight()
                 );
             }
-
-            default -> throw new Exception("ShippingType not defined");
         }
 
 
@@ -77,7 +75,7 @@ public class ShippingUseCase {
 
     public ShippingEntity updateShipping(UpdateShippingRequest updateShippingRequest) throws Exception {
         ShippingEntity shippingEntity = shippingDataProvider.findById(updateShippingRequest.getId());
-        BigDecimal value;
+        BigDecimal value = null;
         Double dimensionalWeight = shippingEntity.getCargoProperties().getDimensionalWeight();
 
         switch (updateShippingRequest.getShippingSelectedType()) {
@@ -100,8 +98,6 @@ public class ShippingUseCase {
                         updateShippingRequest.getCargoPropertiesRequest().getWeight()
                 );
             }
-
-            default -> throw new Exception("ShippingType not defined");
         }
 
         ShippingEntity updatedShippingEntity = new ShippingEntity.ShippingEntityBuilder()

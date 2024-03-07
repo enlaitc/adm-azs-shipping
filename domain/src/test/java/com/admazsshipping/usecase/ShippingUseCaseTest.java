@@ -53,9 +53,9 @@ class ShippingUseCaseTest {
                 .build();
     }
 
-    @DisplayName("should save with success")
+    @DisplayName("should save with success when passing WEIGHT_CALCULATE")
     @Test
-    void saveShipping_ShouldReturnShippingWithSaveSuccess() throws Exception {
+    void saveShipping_ShouldReturnShippingWhenPassingWEIGHT_CALCULATEWithSaveSuccess() throws Exception {
         SaveShippingRequest shippingRequest = new SaveShippingRequest.SaveShippingRequestBuilder()
                 .shippingSelectedType(ShippingSelectedTypeEnum.WEIGHT_CALCULATE)
                 .cargoPropertiesRequest(
@@ -83,9 +83,44 @@ class ShippingUseCaseTest {
 
     }
 
-    @DisplayName("should update with success")
+    @DisplayName("should save with success when passing CUBED_CALCULATE")
     @Test
-    void updateShipping_ShouldReturnUpdatedShippingWithSuccess() throws Exception {
+    void saveShipping_ShouldReturnShippingWhenPassingCUBED_CALCULATEWithSaveSuccess() throws Exception {
+        Double dimensionalWeight = 1d;
+        BigDecimal value = BigDecimal.ONE;
+        SaveShippingRequest shippingRequest = new SaveShippingRequest.SaveShippingRequestBuilder()
+                .shippingSelectedType(ShippingSelectedTypeEnum.CUBED_CALCULATE)
+                .cargoPropertiesRequest(
+                        new SaveCargoPropertiesRequest.SaveCargoPropertiesRequestBuilder()
+                                .weight(1D)
+                                .width(1d)
+                                .length(1d)
+                                .height(1d)
+                                .cubageFactor(1d)
+                                .build()
+                )
+                .build();
+
+        when(calculationUseCase.calculateDimensionalWeight(anyDouble(), anyDouble(), anyDouble(), anyDouble()))
+                .thenReturn(dimensionalWeight);
+        when(calculationUseCase.calculateValueByDimensionalWeight(shippingRequest.getCargoPropertiesRequest().getWeight(), dimensionalWeight))
+                .thenReturn(value);
+        when(shippingDataProvider.saveShipping(any(ShippingEntity.class)))
+                .thenReturn(shipping);
+
+        ShippingEntity savedShipping = shippingUseCase.saveShipping(shippingRequest);
+
+        assertEquals(shipping, savedShipping);
+        verify(shippingDataProvider).saveShipping(any(ShippingEntity.class));
+        verify(calculationUseCase).calculateDimensionalWeight(anyDouble(), anyDouble(), anyDouble(), anyDouble());
+        verify(calculationUseCase).calculateValueByDimensionalWeight(anyDouble(), anyDouble());
+        verifyNoMoreInteractions(shippingDataProvider);
+
+    }
+
+    @DisplayName("should update with success when passing WEIGHT_CALCULATE")
+    @Test
+    void updateShipping_ShouldReturnShippingWhenPassingWEIGHT_CALCULATEWithUpdateSuccess() throws Exception {
         UpdateShippingRequest shippingRequest =
                 new UpdateShippingRequest.UpdateShippingRequestBuilder()
                         .shippingSelectedType(ShippingSelectedTypeEnum.WEIGHT_CALCULATE)
@@ -115,7 +150,45 @@ class ShippingUseCaseTest {
         verifyNoMoreInteractions(shippingDataProvider);
     }
 
+    @DisplayName("should update with success when passing CUBED_CALCULATE")
+    @Test
+    void updateShipping_ShouldReturnShippingWhenPassingCUBED_CALCULATEWithUpdateSuccess() throws Exception {
+        Double dimensionalWeight = 1d;
+        BigDecimal value = BigDecimal.ONE;
+        UpdateShippingRequest shippingRequest =
+                new UpdateShippingRequest.UpdateShippingRequestBuilder()
+                        .shippingSelectedType(ShippingSelectedTypeEnum.CUBED_CALCULATE)
+                        .cargoPropertiesRequest(
+                                new SaveCargoPropertiesRequest.SaveCargoPropertiesRequestBuilder()
+                                        .weight(1D)
+                                        .width(1d)
+                                        .length(1d)
+                                        .height(1d)
+                                        .cubageFactor(1d)
+                                        .build()
+                        )
+                        .build();
 
+        when(shippingDataProvider.findById(shippingRequest.getId()))
+                .thenReturn(this.shipping);
+        when(calculationUseCase.calculateDimensionalWeight(anyDouble(),anyDouble(),anyDouble(),anyDouble()))
+                .thenReturn(dimensionalWeight);
+        when(calculationUseCase.calculateValueByDimensionalWeight(shippingRequest.getCargoPropertiesRequest().getWeight(), dimensionalWeight))
+                .thenReturn(value);
+        when(shippingDataProvider.updateShipping(any(ShippingEntity.class)))
+                .thenReturn(this.shipping);
+
+        ShippingEntity updatedShipping = shippingUseCase.updateShipping(shippingRequest);
+
+        assertEquals(this.shipping, updatedShipping);
+        verify(shippingDataProvider).updateShipping(any(ShippingEntity.class));
+        verify(calculationUseCase).calculateDimensionalWeight(anyDouble(),anyDouble(),anyDouble(),anyDouble());
+        verify(calculationUseCase).calculateValueByDimensionalWeight(anyDouble(),anyDouble());
+        verifyNoMoreInteractions(shippingDataProvider);
+    }
+
+
+    @DisplayName("should return list of all shipping when success")
     @Test
     void findAllShipping_ShouldReturnAllShippingWithSuccess() {
         when(shippingDataProvider.findAllShipping()).thenReturn(Collections.singletonList(shipping));
@@ -127,6 +200,7 @@ class ShippingUseCaseTest {
         verifyNoMoreInteractions(shippingDataProvider);
     }
 
+    @DisplayName("should return a pageable shipping list find by any field when success")
     @Test
     void findByAnyFields_ShouldReturnPageOfShippingEntityWithSuccess() {
         when(shippingDataProvider.findByAnyFields(anyString(), any(Pageable.class)))
@@ -139,6 +213,7 @@ class ShippingUseCaseTest {
         verifyNoMoreInteractions(shippingDataProvider);
     }
 
+    @DisplayName("Should return NoContent when delete a ship with success ")
     @Test
     void deleteShipping_ShouldReturnNoContentWhenDeleteShippingWithSuccess() throws Exception {
         String shippingId = "";
@@ -154,6 +229,7 @@ class ShippingUseCaseTest {
         verifyNoMoreInteractions(shippingDataProvider);
     }
 
+    @DisplayName("Should return Shipping when update with Status CANCELLED with success")
     @Test
     void cancelShipping_ShouldReturnShippingEntityWhenUpdateWithSuccess() throws Exception {
         String shippingId = "";
