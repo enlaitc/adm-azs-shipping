@@ -2,11 +2,11 @@ package com.admazsshipping.entity.vo;
 
 public class ShippingMethodVO {
 
-    private String cargoType;
-    private String vehicleType;
+    private CargoTypeEnum cargoType;
+    private VehicleTypeEnum vehicleType;
 
 
-    public ShippingMethodVO(String cargoType, String vehicleType) {
+    public ShippingMethodVO(CargoTypeEnum cargoType, VehicleTypeEnum vehicleType) {
         this.cargoType = cargoType;
         this.vehicleType = vehicleType;
     }
@@ -14,19 +14,19 @@ public class ShippingMethodVO {
     public ShippingMethodVO() {
     }
 
-    public String getCargoType() {
+    public CargoTypeEnum getCargoType() {
         return cargoType;
     }
 
-    public void setCargoType(String cargoType) {
+    public void setCargoType(CargoTypeEnum cargoType) {
         this.cargoType = cargoType;
     }
 
-    public String getVehicleType() {
+    public VehicleTypeEnum getVehicleType() {
         return vehicleType;
     }
 
-    public void setVehicleType(String vehicleType) {
+    public void setVehicleType(VehicleTypeEnum vehicleType) {
         this.vehicleType = vehicleType;
     }
 }

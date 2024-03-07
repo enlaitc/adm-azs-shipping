@@ -1,13 +1,19 @@
 package com.admazsshipping.entity.vo;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.util.Date;
 
 public class SaveShippingRequest {
 
+    @NotNull(message = "recipientName cannot be null")
     private String recipientName;
+    @NotNull(message = "recipientAddress cannot be null")
     private RecipientAddressVO recipientAddress;
     private ShippingMethodVO shippingMethod;
+    @NotNull(message = "shippingSelectedType cannot be null")
     private ShippingSelectedTypeEnum shippingSelectedType;
+    @NotNull(message = "cargoPropertiesRequest cannot be null")
     private SaveCargoPropertiesRequest cargoPropertiesRequest;
     private String trackingNumber;
     private Date expectedDeliveryDate;

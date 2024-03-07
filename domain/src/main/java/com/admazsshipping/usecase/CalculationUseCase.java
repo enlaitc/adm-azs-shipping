@@ -1,6 +1,5 @@
 package com.admazsshipping.usecase;
 
-import com.admazsshipping.entity.vo.ShippingSelectedTypeEnum;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -14,11 +13,11 @@ public class CalculationUseCase {
         return Math.round(dimensionalWeight * 100.0) / 100.0;
     }
 
-    protected BigDecimal calculateShippingValue(Double weight, Double dimensionalWeight, ShippingSelectedTypeEnum shippingSelectedType) {
-        double cost = switch (shippingSelectedType) {
-            case CUBED_CALCULATE -> Math.max(weight, dimensionalWeight) * 1;
-            case WEIGHT_CALCULATE -> weight * 1;
-        };
-        return new BigDecimal(cost);
+    protected BigDecimal calculateValueByDimensionalWeight(Double weight, Double dimensionalWeight) {
+        return BigDecimal.valueOf(Math.max(weight, dimensionalWeight) * 1);
+    }
+
+    protected BigDecimal calculateValueByWeight(Double weight){
+        return new BigDecimal(weight * 1);
     }
 }

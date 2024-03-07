@@ -4,6 +4,7 @@ import com.admazsshipping.entity.ShippingEntity;
 import com.admazsshipping.entity.vo.SaveShippingRequest;
 import com.admazsshipping.entity.vo.UpdateShippingRequest;
 import com.admazsshipping.usecase.ShippingUseCase;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +22,7 @@ public class ShippingController {
     private ShippingUseCase shippingUseCase;
 
     @PostMapping
-    public ShippingEntity saveShipping(@RequestBody SaveShippingRequest shippingRequest) {
+    public ShippingEntity saveShipping(@Valid @RequestBody SaveShippingRequest shippingRequest) throws Exception {
         return shippingUseCase.saveShipping(shippingRequest);
     }
 
@@ -36,7 +37,7 @@ public class ShippingController {
     }
 
     @GetMapping("/{field}")
-    public Page<ShippingEntity> findByAnyFields(@PathVariable String field, Pageable pageable){
+    public Page<ShippingEntity> findByAnyFields(@PathVariable String field, Pageable pageable) {
         return shippingUseCase.findByAnyFields(field, pageable);
     }
 

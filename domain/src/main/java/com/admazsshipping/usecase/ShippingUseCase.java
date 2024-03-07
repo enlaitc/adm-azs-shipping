@@ -25,19 +25,32 @@ public class ShippingUseCase {
         this.calculationUseCase = calculationUseCase;
     }
 
-    public ShippingEntity saveShipping(SaveShippingRequest shippingRequest) {
-        Double dimensionalWeight = calculationUseCase.calculateDimensionalWeight(
-                shippingRequest.getCargoPropertiesRequest().getLength(),
-                shippingRequest.getCargoPropertiesRequest().getWidth(),
-                shippingRequest.getCargoPropertiesRequest().getHeight(),
-                shippingRequest.getCargoPropertiesRequest().getCubageFactor()
-        );
+    public ShippingEntity saveShipping(SaveShippingRequest shippingRequest) throws Exception {
+        BigDecimal value = null;
+        Double dimensionalWeight = null;
 
-        BigDecimal value = calculationUseCase.calculateShippingValue(
-                shippingRequest.getCargoPropertiesRequest().getWeight(),
-                dimensionalWeight,
-                shippingRequest.getShippingSelectedType()
-        );
+        switch (shippingRequest.getShippingSelectedType()) {
+            case CUBED_CALCULATE -> {
+                dimensionalWeight = calculationUseCase.calculateDimensionalWeight(
+                        shippingRequest.getCargoPropertiesRequest().getLength(),
+                        shippingRequest.getCargoPropertiesRequest().getWidth(),
+                        shippingRequest.getCargoPropertiesRequest().getHeight(),
+                        shippingRequest.getCargoPropertiesRequest().getCubageFactor()
+                );
+
+                value = calculationUseCase.calculateValueByDimensionalWeight(
+                        shippingRequest.getCargoPropertiesRequest().getWeight(),
+                        dimensionalWeight
+                );
+            }
+
+            case WEIGHT_CALCULATE -> {
+                value = calculationUseCase.calculateValueByWeight(
+                        shippingRequest.getCargoPropertiesRequest().getWeight()
+                );
+            }
+        }
+
 
         return shippingDataProvider.saveShipping(
                 new ShippingEntity.ShippingEntityBuilder()
@@ -62,19 +75,31 @@ public class ShippingUseCase {
 
     public ShippingEntity updateShipping(UpdateShippingRequest updateShippingRequest) throws Exception {
         ShippingEntity shippingEntity = shippingDataProvider.findById(updateShippingRequest.getId());
+        BigDecimal value = null;
+        Double dimensionalWeight = shippingEntity.getCargoProperties().getDimensionalWeight();
 
-        Double dimensionalWeight = calculationUseCase.calculateDimensionalWeight(
-                updateShippingRequest.getCargoPropertiesRequest().getLength(),
-                updateShippingRequest.getCargoPropertiesRequest().getWidth(),
-                updateShippingRequest.getCargoPropertiesRequest().getHeight(),
-                updateShippingRequest.getCargoPropertiesRequest().getCubageFactor()
-        );
+        switch (updateShippingRequest.getShippingSelectedType()) {
+            case CUBED_CALCULATE -> {
+                dimensionalWeight = calculationUseCase.calculateDimensionalWeight(
+                        updateShippingRequest.getCargoPropertiesRequest().getLength(),
+                        updateShippingRequest.getCargoPropertiesRequest().getWidth(),
+                        updateShippingRequest.getCargoPropertiesRequest().getHeight(),
+                        updateShippingRequest.getCargoPropertiesRequest().getCubageFactor()
+                );
 
-        BigDecimal value = calculationUseCase.calculateShippingValue(
-                updateShippingRequest.getCargoPropertiesRequest().getWeight(),
-                dimensionalWeight,
-                updateShippingRequest.getShippingSelectedType()
-        );
+                value = calculationUseCase.calculateValueByDimensionalWeight(
+                        updateShippingRequest.getCargoPropertiesRequest().getWeight(),
+                        dimensionalWeight
+                );
+            }
+
+            case WEIGHT_CALCULATE -> {
+                value = calculationUseCase.calculateValueByWeight(
+                        updateShippingRequest.getCargoPropertiesRequest().getWeight()
+                );
+            }
+        }
+
         ShippingEntity updatedShippingEntity = new ShippingEntity.ShippingEntityBuilder()
                 .id(shippingEntity.getId())
                 .recipientName(updateShippingRequest.getRepicientName())

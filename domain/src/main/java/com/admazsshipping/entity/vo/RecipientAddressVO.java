@@ -30,7 +30,7 @@ public class RecipientAddressVO {
         private String state;
         private int postcode;
 
-        private RecipientAddressVOBuilder() {
+        public RecipientAddressVOBuilder() {
         }
 
         public static RecipientAddressVOBuilder aRecipientAddressVO() {
