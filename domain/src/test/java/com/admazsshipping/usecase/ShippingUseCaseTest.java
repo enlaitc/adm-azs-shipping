@@ -35,12 +35,22 @@ class ShippingUseCaseTest {
     @BeforeEach
     public void setUp() {
         shipping = new ShippingEntity.ShippingEntityBuilder()
+                .cargoProperties(new CargoPropertiesVO(
+                        1d,
+                        1d,
+                        1d,
+                        1d,
+                        1d,
+                        1d,
+                        BigDecimal.TEN
+
+                ))
                 .build();
     }
 
     @DisplayName("should save with success")
     @Test
-    void saveShipping_ShouldReturnShippingWithSaveSuccess(){
+    void saveShipping_ShouldReturnShippingWithSaveSuccess() throws Exception {
         SaveShippingRequest shippingRequest = new SaveShippingRequest.SaveShippingRequestBuilder()
                 .shippingSelectedType(ShippingSelectedTypeEnum.WEIGHT_CALCULATE)
                 .cargoPropertiesRequest(
@@ -54,9 +64,7 @@ class ShippingUseCaseTest {
                 )
                 .build();
 
-        when(calculationUseCase.calculateDimensionalWeight(anyDouble(), anyDouble(), anyDouble(), anyDouble()))
-                .thenReturn(1D);
-        when(calculationUseCase.calculateShippingValue(anyDouble(),anyDouble(), any(ShippingSelectedTypeEnum.class)))
+        when(calculationUseCase.calculateValueByWeight(anyDouble()))
                 .thenReturn(BigDecimal.ONE);
         when(shippingDataProvider.saveShipping(any(ShippingEntity.class)))
                 .thenReturn(shipping);
@@ -65,6 +73,7 @@ class ShippingUseCaseTest {
 
         assertEquals(shipping, savedShipping);
         verify(shippingDataProvider).saveShipping(any(ShippingEntity.class));
+        verify(calculationUseCase).calculateValueByWeight(shippingRequest.getCargoPropertiesRequest().getWeight());
         verifyNoMoreInteractions(shippingDataProvider);
 
     }
@@ -88,9 +97,7 @@ class ShippingUseCaseTest {
 
         when(shippingDataProvider.findById(shippingRequest.getId()))
                 .thenReturn(this.shipping);
-        when(calculationUseCase.calculateDimensionalWeight(anyDouble(), anyDouble(), anyDouble(), anyDouble()))
-                .thenReturn(1D);
-        when(calculationUseCase.calculateShippingValue(anyDouble(),anyDouble(), any(ShippingSelectedTypeEnum.class)))
+        when(calculationUseCase.calculateValueByWeight(anyDouble()))
                 .thenReturn(BigDecimal.ONE);
         when(shippingDataProvider.updateShipping(any(ShippingEntity.class)))
                 .thenReturn(this.shipping);
@@ -99,8 +106,10 @@ class ShippingUseCaseTest {
 
         assertEquals(this.shipping, updatedShipping);
         verify(shippingDataProvider).updateShipping(any(ShippingEntity.class));
+        verify(calculationUseCase).calculateValueByWeight(shippingRequest.getCargoPropertiesRequest().getWeight());
         verifyNoMoreInteractions(shippingDataProvider);
     }
+
 
     @Test
     void findAllShipping_ShouldReturnAllShippingWithSuccess() {

@@ -1,11 +1,20 @@
 package com.admazsshipping.entity.vo;
 
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+
 public class SaveCargoPropertiesRequest {
-    private Double weight = (double) 0;
+    @DecimalMin(value = "0", message = "weight must be greater than 0")
+    private Double weight;
+    @DecimalMin(value = "0", message = "length must be greater than 0")
     private Double length = (double) 0;
+    @DecimalMin(value = "0", message = "width must be greater than 0")
     private Double width = (double) 0;
+    @DecimalMin(value = "0", message = "height must be greater than 0")
     private Double height = (double) 0;
+    @DecimalMin(value = "0", message = "cubageFactor must be greater than 0")
     private Double cubageFactor;
+
 
     public SaveCargoPropertiesRequest(Double weight, Double length, Double width, Double height, Double cubageFactor) {
         this.weight = weight;
