@@ -2,6 +2,7 @@ package com.admazsshipping.entrypoint.http;
 
 import com.admazsshipping.entity.ShippingEntity;
 import com.admazsshipping.entity.vo.SaveShippingRequest;
+import com.admazsshipping.entity.vo.ShippingStatusEnum;
 import com.admazsshipping.entity.vo.UpdateShippingRequest;
 import com.admazsshipping.usecase.ShippingUseCase;
 import jakarta.validation.Valid;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/shipping")
+@RequestMapping("/v1/shippings")
 public class ShippingController {
 
 
@@ -36,18 +37,23 @@ public class ShippingController {
         return shippingUseCase.updateShipping(updateShippingRequest);
     }
 
-    @GetMapping("/{field}")
-    public Page<ShippingEntity> findByAnyFields(@PathVariable String field, Pageable pageable) {
-        return shippingUseCase.findByAnyFields(field, pageable);
-    }
-
-    @PatchMapping("/cancel/{shippingId}")
-    public ShippingEntity cancelShipping(@PathVariable String shippingId) throws Exception {
-        return shippingUseCase.cancelShipping(shippingId);
+    @GetMapping("/field/{shippingField}")
+    public Page<ShippingEntity> findByAnyFields(@PathVariable String shippingField, Pageable pageable) {
+        return shippingUseCase.findByAnyFields(shippingField, pageable);
     }
 
     @DeleteMapping("/{shippingId}")
     public ResponseEntity<Void> deleteShipping(@PathVariable String shippingId) throws Exception {
         return shippingUseCase.deleteShipping(shippingId);
+    }
+
+    @GetMapping("/{shippingId}")
+    public ShippingEntity findShippingById(@PathVariable String shippingId) throws Exception{
+        return shippingUseCase.findShippingById(shippingId);
+    }
+
+    @PatchMapping("/status/{shippingId}")
+    public ShippingEntity updateShippingStatus(@PathVariable String shippingId, @RequestBody ShippingStatusEnum shippingStatus) throws Exception {
+        return shippingUseCase.updateShippingStatus(shippingId, shippingStatus);
     }
 }

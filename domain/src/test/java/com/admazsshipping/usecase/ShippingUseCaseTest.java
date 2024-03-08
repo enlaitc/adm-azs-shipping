@@ -19,7 +19,9 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -171,7 +173,7 @@ class ShippingUseCaseTest {
 
         when(shippingDataProvider.findById(shippingRequest.getId()))
                 .thenReturn(this.shipping);
-        when(calculationUseCase.calculateDimensionalWeight(anyDouble(),anyDouble(),anyDouble(),anyDouble()))
+        when(calculationUseCase.calculateDimensionalWeight(anyDouble(), anyDouble(), anyDouble(), anyDouble()))
                 .thenReturn(dimensionalWeight);
         when(calculationUseCase.calculateValueByDimensionalWeight(shippingRequest.getCargoPropertiesRequest().getWeight(), dimensionalWeight))
                 .thenReturn(value);
@@ -182,8 +184,8 @@ class ShippingUseCaseTest {
 
         assertEquals(this.shipping, updatedShipping);
         verify(shippingDataProvider).updateShipping(any(ShippingEntity.class));
-        verify(calculationUseCase).calculateDimensionalWeight(anyDouble(),anyDouble(),anyDouble(),anyDouble());
-        verify(calculationUseCase).calculateValueByDimensionalWeight(anyDouble(),anyDouble());
+        verify(calculationUseCase).calculateDimensionalWeight(anyDouble(), anyDouble(), anyDouble(), anyDouble());
+        verify(calculationUseCase).calculateValueByDimensionalWeight(anyDouble(), anyDouble());
         verifyNoMoreInteractions(shippingDataProvider);
     }
 
@@ -229,23 +231,54 @@ class ShippingUseCaseTest {
         verifyNoMoreInteractions(shippingDataProvider);
     }
 
-    @DisplayName("Should return Shipping when update with Status CANCELLED with success")
+    @DisplayName("Should return Shipping when passing a ShippingId with success")
     @Test
-    void cancelShipping_ShouldReturnShippingEntityWhenUpdateWithSuccess() throws Exception {
+    void findShippingById_ShouldReturnShippingWhenPassingIdWithSuccess() throws Exception {
         String shippingId = "";
-        ShippingEntity shippingEntity = new ShippingEntity.ShippingEntityBuilder()
-                .shippingStatus(ShippingStatusEnum.POSTING)
-                .build();
+        when(shippingDataProvider.findById(anyString()))
+                .thenReturn(this.shipping);
+
+        ShippingEntity response = shippingUseCase.findShippingById(shippingId);
+
+        assertEquals(shipping, response);
+        verify(shippingDataProvider).findById(anyString());
+        verifyNoMoreInteractions(shippingDataProvider);
+    }
+
+    @DisplayName("Should return Exception when failed")
+    @Test
+    void findShippingById_ShouldReturnExceptionWhenFailed() throws Exception {
+        String shippingId = "";
 
         when(shippingDataProvider.findById(shippingId))
-                .thenReturn(this.shipping);
+                .thenThrow(Exception.class);
+
+        final Exception e = assertThrows(Exception.class, () -> {
+            shippingUseCase.findShippingById(shippingId);
+        });
+
+        assertThat(e.getClass(), is(Exception.class));
+        verify(shippingDataProvider).findById(anyString());
+        verifyNoMoreInteractions(shippingDataProvider);
+    }
+
+    @DisplayName("Should return Shipping when update status with success")
+    @Test
+    void updateShippingStatus_ShouldReturnShippingEntityWhenUpdateStatusWithSuccess() throws Exception {
+        String shippingId = "";
+        ShippingStatusEnum shippingStatus = ShippingStatusEnum.DELIVERED;
+        shipping.setShippingStatus(shippingStatus);
+        when(shippingDataProvider.findById(shippingId))
+                .thenReturn(shipping);
         when(shippingDataProvider.updateShipping(any(ShippingEntity.class)))
-                .thenReturn(this.shipping);
+                .thenReturn(shipping);
 
-        ShippingEntity response = shippingUseCase.cancelShipping(shippingId);
+        ShippingEntity response = shippingUseCase.updateShippingStatus(shippingId,shippingStatus);
 
-        assertEquals(ShippingStatusEnum.CANCELLED, response.getShippingStatus());
+        assertEquals(ShippingStatusEnum.DELIVERED, response.getShippingStatus());
+        verify(shippingDataProvider).findById(anyString());
         verify(shippingDataProvider).updateShipping(any(ShippingEntity.class));
         verifyNoMoreInteractions(shippingDataProvider);
+
     }
 }

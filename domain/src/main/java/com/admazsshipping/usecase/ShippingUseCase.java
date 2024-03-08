@@ -121,16 +121,20 @@ public class ShippingUseCase {
         return shippingDataProvider.findByAnyFields(field, pageable);
     }
 
-    public ShippingEntity cancelShipping(String shippingId) throws Exception {
-        ShippingEntity shippingEntity = shippingDataProvider.findById(shippingId);
-
-        shippingEntity.setShippingStatus(ShippingStatusEnum.CANCELLED);
-
-        return shippingDataProvider.updateShipping(shippingEntity);
-    }
-
     public ResponseEntity<Void> deleteShipping(String shippingId) throws Exception {
         ShippingEntity shippingEntity = shippingDataProvider.findById(shippingId);
         return shippingDataProvider.deleteShipping(shippingEntity);
+    }
+
+    public ShippingEntity findShippingById(String shippingId) throws Exception {
+        return shippingDataProvider.findById(shippingId);
+    }
+
+    public ShippingEntity updateShippingStatus(String shippingId,ShippingStatusEnum shippingStatus) throws Exception {
+        ShippingEntity shippingEntity = shippingDataProvider.findById(shippingId);
+
+        shippingEntity.setShippingStatus(shippingStatus);
+
+        return shippingDataProvider.updateShipping(shippingEntity);
     }
 }
