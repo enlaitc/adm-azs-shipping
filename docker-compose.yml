@@ -1,0 +1,19 @@
+version: "3.2"
+services:
+  mongodb:
+    image: mongo
+    restart: always
+    container_name: mongo
+    ports:
+      - "27017:27017"
+
+  app:
+    build:
+      context: .
+    depends_on:
+      - mongodb
+    environment:
+      - TZ=America/Sao_Paulo
+      - SPRING_DATASOURCE_URL=jdbc:mongodb://mongodb:27017/AZShip
+    ports:
+      - "8080:8080"
